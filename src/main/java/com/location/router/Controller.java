@@ -48,7 +48,7 @@ public class Controller {
         return country;
     }
 
-    public void redirectBasedOnLocation() throws IOException {
+    public void redirectBasedOnLocation(String redirect) throws IOException {
 
         String ipAddress = request.getRemoteAddr();
 
@@ -59,23 +59,25 @@ public class Controller {
 
         // Determine the destination URL based on the user's location
         if (location.equals("US")) {
-            redirectUrl = "https://20.51.237.16";
+            redirectUrl = "http://20.51.237.16:8081/"+redirect;
         } else if (location.equals("AsiaPacific")) {
-            redirectUrl = "http://destination2.com";
+            redirectUrl = "http://20.51.237.16:8081/"+redirect;
         } else {
-            redirectUrl = "http://defaultdestination.com";
+            redirectUrl = "http://20.51.237.16:8081/"+redirect;
         }
+        response.setStatus(307); //this makes the redirection keep your requesting method as is.
+        response.addHeader("content-type","application/json");
         // Redirect the user to the appropriate URL
         response.sendRedirect(redirectUrl);
     }
 
-    @GetMapping("/publish")
+    @PostMapping("/publish")
     public void redirectPublish() throws IOException {
-        redirectBasedOnLocation();
+        redirectBasedOnLocation("publish");
     }
 
     @GetMapping("/traffic")
     public void redirectSetQuery() throws IOException {
-        redirectBasedOnLocation();
+        redirectBasedOnLocation("traffic");
     }
 }
