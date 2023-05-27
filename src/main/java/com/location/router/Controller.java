@@ -48,8 +48,29 @@ public class Controller {
         return country;
     }
 
+//    public void redirectBasedOnLocation(String redirect) throws IOException {
+//
+//        String ipAddress = request.getRemoteAddr();
+//
+//        // Use the appropriate geolocation API to get the user's location details
+//        String location = getUserLocation(ipAddress);
+//
+//        String redirectUrl;
+//
+//        // Determine the destination URL based on the user's location
+//        if (location.equals("US")) {
+//            redirectUrl = "http://20.51.237.16:8081/"+redirect;
+//        } else if (location.equals("AsiaPacific")) {
+//            redirectUrl = "http://20.51.237.16:8081/"+redirect;
+//        } else {
+//            redirectUrl = "http://20.51.237.16:8081/"+redirect;
+//        }
+//        response.setStatus(307); //this makes the redirection keep your requesting method as is.
+//        response.addHeader("content-type","application/json");
+//        // Redirect the user to the appropriate URL
+//        response.sendRedirect(redirectUrl);
+//    }
     public void redirectBasedOnLocation(String redirect) throws IOException {
-
         String ipAddress = request.getRemoteAddr();
 
         // Use the appropriate geolocation API to get the user's location details
@@ -59,21 +80,44 @@ public class Controller {
 
         // Determine the destination URL based on the user's location
         if (location.equals("US")) {
-            redirectUrl = "http://20.51.237.16:8081/"+redirect;
+            redirectUrl = "http://20.51.237.16:8081/" + redirect;
         } else if (location.equals("AsiaPacific")) {
-            redirectUrl = "http://20.51.237.16:8081/"+redirect;
+            redirectUrl = "http://20.51.237.16:8081/" + redirect;
         } else {
-            redirectUrl = "http://20.51.237.16:8081/"+redirect;
+            redirectUrl = "http://20.51.237.16:8081/" + redirect;
         }
-        response.setStatus(307); //this makes the redirection keep your requesting method as is.
-        response.addHeader("content-type","application/json");
-        // Redirect the user to the appropriate URL
-        response.sendRedirect(redirectUrl);
+
+        response.setStatus(HttpServletResponse.SC_TEMPORARY_REDIRECT);
+        response.setHeader("Location", redirectUrl);
     }
 
-    @PostMapping("/publish")
+    public void redirectPostBasedOnLocation(String redirect) throws IOException {
+        String ipAddress = request.getRemoteAddr();
+
+        // Use the appropriate geolocation API to get the user's location details
+        String location = getUserLocation(ipAddress);
+
+        String redirectUrl;
+
+        // Determine the destination URL based on the user's location
+        if (location.equals("US")) {
+            redirectUrl = "http://20.51.237.16:8081/" + redirect;
+        } else if (location.equals("AsiaPacific")) {
+            redirectUrl = "http://20.51.237.16:8081/" + redirect;
+        } else {
+            redirectUrl = "http://20.51.237.16:8081/" + redirect;
+        }
+
+        response.setStatus(HttpServletResponse.SC_TEMPORARY_REDIRECT);
+        response.setHeader("Location", redirectUrl);
+        response.addHeader("content-type", "application/json");
+        response.getWriter().write("{}");
+    }
+
+
+    @GetMapping("/publish")
     public void redirectPublish() throws IOException {
-        redirectBasedOnLocation("publish");
+        redirectPostBasedOnLocation("publish");
     }
 
     @GetMapping("/traffic")
